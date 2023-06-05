@@ -15,9 +15,9 @@
         - タイトルにやることを、Writeに何を具体的にするかを書く
         - Submit new issueでissueを立てる
     1. (mainブランチから始める)
-        - git checkout main ブランチをmainに
+        - git checkout main ブランチをmainに (プルリク出した後コード書き換えると元に戻れないので、2のgit add~を行ってください)
         - git branch --set-upstream-to=origin/<branch> main 現在のブランチのトラッキング情報を設定
-        - git pull mainブランチの更新があるか確認する
+        - git pull mainブランチの更新があるか確認する.これをすると反映されます
     2. featureブランチで開発
         - git checkout -b feature/{name} ブランチを作って移動する,既にブランチを作ってるなら-bは不要です
         - git branchで今いるブランチを確認できます
@@ -33,7 +33,7 @@
         - git push origin feature/{name}
     3. pull requestを出す
         - githubのリポジトリページに飛ぶ
-        - compare & pull requestを押す
+        - code->branch->new pull request->referenceからissueと関連付ける ->create pull request
         - 許可をもらえたらmergeする
     4. issueを閉じる
         
