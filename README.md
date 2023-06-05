@@ -33,6 +33,7 @@
     3. pull requestを出す
         - githubのリポジトリページに飛ぶ
         - compare & pull requestを押す
+        
     
         
 
