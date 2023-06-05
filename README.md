@@ -19,7 +19,8 @@
         - git branch --set-upstream-to=origin/<branch> main 現在のブランチのトラッキング情報を設定
         - git pull mainブランチの更新があるか確認する
     2. featureブランチで開発
-        - git checkout -b feature/{name} ブランチを作って移動する
+        - git checkout -b feature/{name} ブランチを作って移動する,既にブランチを作ってるなら-bは不要です
+        - git branchで今いるブランチを確認できます
         - git add 追加するファイル
         - git commit -m "メッセージ"
             - 書式
@@ -33,6 +34,8 @@
     3. pull requestを出す
         - githubのリポジトリページに飛ぶ
         - compare & pull requestを押す
+        - 許可をもらえたらmergeする
+    4. issueを閉じる
         
     
         
