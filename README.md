@@ -10,5 +10,31 @@
     3. git push origin main push
 
 - チーム作業のやり方
-    1. git checkout main ブランチをmainに
-    2. 
+    0. issueを作成
+        - issuesからnew issueを押す
+        - タイトルにやることを、Writeに何を具体的にするかを書く
+        - Submit new issueでissueを立てる
+    1. (mainブランチから始める)
+        - git checkout main ブランチをmainに
+        - git branch --set-upstream-to=origin/<branch> main 現在のブランチのトラッキング情報を設定
+        - git pull mainブランチの更新があるか確認する
+    2. featureブランチで開発
+        - git checkout -b feature/{name} ブランチを作って移動する
+        - git add 追加するファイル
+        - git commit -m "メッセージ"
+            - 書式
+                - [add/fix/update/remove] #num 内容
+            - メッセージの種類
+                1. fix バグ修正
+                2. add 新規ファイル
+                3. update コード追加
+                4. remove 削除
+        - git push origin feature/{name}
+    3. pull requestを出す
+        - githubのリポジトリページに飛ぶ
+        - compare & pull requestを押す
+    
+        
+
+
+
