@@ -4,5 +4,11 @@
 
 ## 作業の流れ
 コードを更新する方法
-- git checkout main 今いるbranchをmainに
-- 
+- main直接いじる(最初以外やっちゃだめ)
+    1. git add .　ファイル追加
+    2. git commit -m "メッセージ" 差分更新
+    3. git push origin main push
+
+- チーム作業のやり方
+    1. git checkout main ブランチをmainに
+    2. 

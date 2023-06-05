@@ -9,15 +9,18 @@ using UnityEngine;
 
 public class PlayerAppearManager : MonoBehaviour
 {
+    //プレイヤーのモデルを格納する配列
     [SerializeField] private GameObject[] playerModels;
+    //アニメーションをコントロール
     [SerializeField] private Animator animator;
-    //userdatamanagerのための変数
+    //userdatamanager
     private UserDataManager userDataManager;
+    //userdatamanagerをアタッチするためのゲームオブジェクト
     [SerializeField] private GameObject userDataManagerObject;
-    //level
+    //プレイヤーのレベル
     [SerializeField] private int level = 1;
-
-    private Vector3 previousPosition; // 前フレームのposition
+    //前フレームのposition
+    private Vector3 previousPosition;
     void Start()
     {
         previousPosition = transform.position;
@@ -26,7 +29,6 @@ public class PlayerAppearManager : MonoBehaviour
         LevelUp();
     }
 
-    // Update is called once per frame
     void Update()
     {
         //LevelUp();
