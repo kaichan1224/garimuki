@@ -2,23 +2,24 @@
 - 共同制作している「garimuki」のリポジトリ
 - 素材、コードのみを管理
 
+## アプリ概要
+- スマホの位置情報に合わせて、地図上を移動するいわゆる「位置ゲー」
+- 今まで歩いてきた道の情報が足跡として残る
+- 移動した距離に応じて、キャラクターがガリガリからムキムキになる
+
 ## 作業の流れ
 コードを更新する方法
-- main直接いじる(最初以外やっちゃだめ)
-    1. git add .　ファイル追加
-    2. git commit -m "メッセージ" 差分更新
-    3. git push origin main push
-
 - チーム作業のやり方
-    0. issueを作成
+
+    1. issueを作成
         - issuesからnew issueを押す
         - タイトルにやることを、Writeに何を具体的にするかを書く
         - Submit new issueでissueを立てる
-    1. (mainブランチから始める)
+    2. (mainブランチから始める)
         - git checkout main ブランチをmainに (プルリク出した後コード書き換えると元に戻れないので、2のgit add~を行ってください)
         - git branch --set-upstream-to=origin/<branch> main 現在のブランチのトラッキング情報を設定
         - git pull mainブランチの更新があるか確認する.これをすると反映されます
-    2. featureブランチで開発
+    3. featureブランチで開発
         - git checkout -b feature/{name} ブランチを作って移動する,既にブランチを作ってるなら-bは不要です
         - git branchで今いるブランチを確認できます
         - git add 追加するファイル
@@ -31,11 +32,11 @@
                 3. update コード追加
                 4. remove 削除
         - git push origin feature/{name}
-    3. pull requestを出す
+    4. pull requestを出す
         - githubのリポジトリページに飛ぶ
         - code->branch->new pull request->referenceからissueと関連付ける ->create pull request
         - 許可をもらえたらmergeする
-    4. issueを閉じる
+    5. issueを閉じる
         
     
         
