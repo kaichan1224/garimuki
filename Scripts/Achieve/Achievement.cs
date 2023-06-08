@@ -26,6 +26,7 @@ public class Achievement
     public int maxprogress;
     //達成したかどうか
     public bool isAchieved;
+    public string unit;
 
     // コンストラクタ
     public Achievement(string name, string description, Sprite icon)
