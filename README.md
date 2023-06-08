@@ -10,7 +10,6 @@
 ## 作業の流れ
 コードを更新する方法
 - チーム作業のやり方
-
     1. issueを作成
         - issuesからnew issueを押す
         - タイトルにやることを、Writeに何を具体的にするかを書く
@@ -37,6 +36,8 @@
         - code->branch->new pull request->referenceからissueと関連付ける ->create pull request
         - 許可をもらえたらmergeする
     5. issueを閉じる
+
+# コーディングルール
         
     
         

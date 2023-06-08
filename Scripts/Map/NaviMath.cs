@@ -2,16 +2,20 @@
  *** Designer:AL21115
  *** Date:2023.5.23
  *** 緯度経度の２地点からkmへ変換
+ *** Last Editor:AL21115
+ *** Last Edited:2023.6.8
  **************************************/
 using System;
 
+//　緯度経度変換用のStaticクラス
 public static class NaviMath
 {
-    private const double EARTH_RADIUS = 6378.137d; //km
-
+    // 地球の半径
+    private const double EARTH_RADIUS = 6378.137d;
     public static double Deg2Rad { get { return Math.PI / 180.0d; } }
 
     //kmで計算する
+    //Haversine formulaのアルゴリズムを使用
     public static double LatlngDistance(Location a, Location b)
     {
         double dlat1 = a.Latitude * Deg2Rad;

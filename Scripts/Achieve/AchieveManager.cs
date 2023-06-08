@@ -2,8 +2,9 @@
  *** Designer:AL21115
  *** Date:2023.5.19
  *** Purpose:達成項目の管理を行う
+ *** Last Editor:AL21115
+ *** Last Edited Date:2023.6.8
  **************************************/
-
 
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,9 @@ public class AchieveManager : MonoBehaviour
     [SerializeField] private List<Achievement> achievements;
     //アチーブメントオブジェクト(UI)
     [SerializeField] private List<GameObject> achievementObjects;
+    //ユーザーデータ管理部を扱うためのゲームオブジェクト
     [SerializeField] private GameObject userDataManagerObject;
+    //外部から呼び出すユーザデータ管理部
     private UserDataManager userDataManager;
 
     private void Awake()
@@ -52,18 +55,25 @@ public class AchieveManager : MonoBehaviour
     //アチーブメント名を指定して、達成率を更新する.アチーブメントオブジェクトの中身も更新する.
     public void UpdateAchievementProgress(string achievementName,int currentprogress)
     {
+        //指定した名前のアチーブメントを取得
         Achievement achievement = achievements.Find(x => x.name == achievementName);
+        //達成率を更新
         achievement.currentprogress = currentprogress;
+        //既に達成していたら処理終了
         if (achievement.isAchieved)
             return;
+        //指定したアチーブメントの表示を更新する
         GameObject achievementObject = achievementObjects[achievements.IndexOf(achievement)];
+        //テキストの更新
         achievementObject.transform.Find("Silder/Text").GetComponent<TMP_Text>().text = achievement.currentprogress.ToString() + "/" + achievement.maxprogress.ToString();
+        //Sliderの更新
         achievementObject.transform.Find("Silder").GetComponent<Slider>().value = achievement.currentprogress;
         if (achievement.currentprogress >= achievement.maxprogress)
             achievement.isAchieved = true;
     }
 
     //ユーザ情報からachievementsを更新する
+    //60秒の定期実行：Unirxに置き換えれるなら置き換えた方が良い
     IEnumerator UpdateUsertoAchieve()
     {
         while (true)
