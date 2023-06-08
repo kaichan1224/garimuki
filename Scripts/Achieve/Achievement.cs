@@ -2,22 +2,30 @@
  *** Designer:AL21115
  *** Date:2023.5.23
  *** 達成項目のデータクラス
+ *** Last Editor:AL21115
+ *** Last Edited:2023.6.8
  **************************************/
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//アチーブメントに関するデータクラス
 [Serializable]
 public class Achievement
 {
-    public string name;//アチーブメントの名前
-    public string description;//説明
-    public Sprite icon;//アイコン
-    public int currentprogress;//現在の進捗率
+    //アチーブメントの名前
+    public string name;
+    //説明
+    public string description;
+    //アイコン
+    public Sprite icon;
+    //現在の進捗率
+    public int currentprogress;
+    //進捗率の上限
     public int maxprogress;
-    public string unit;
-    public bool isAchieved;//達成したかどうか
+    //達成したかどうか
+    public bool isAchieved;
 
     // コンストラクタ
     public Achievement(string name, string description, Sprite icon)
