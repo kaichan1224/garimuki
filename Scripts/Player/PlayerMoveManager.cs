@@ -14,6 +14,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mapbox.Unity.Map;
 using Unity.Collections;
+using static UnityEditor.PlayerSettings;
+
 public class PlayerMoveManager : MonoBehaviour
 {
     // 2dマップを管理するクラス
@@ -28,88 +30,110 @@ public class PlayerMoveManager : MonoBehaviour
 
     //　キーボードで操作する際の移動スピード
     [SerializeField] private float speed = 2f;
-    //ユーザーデータクラスをアタッチするためのゲームオブジェクト
-    [SerializeField] private GameObject userDataManagerObject;
     // ユーザーデータを管理するためのクラス
-    private UserDataManager userDataManager;
+    [SerializeField] private UserDataManager userDataManager;
+    // 距離を取得する間隔
+    [SerializeField] private float intervalTime = 10f;
     //　直前の位置
     private Location prevLocation;
     //　今現在の位置
     private Location currentLocation;
 
-    private void Awake()
+    private void Start()
     {
-        userDataManager = userDataManagerObject.GetComponent<UserDataManager>();
+        StartCoroutine(DataUpdate());
     }
 
-    void Update()
+    private void Update()
     {
-        Move();
+        if (isOperateMode)
+            OperateMove();
+        else
+            MoveByLonLat();
+    }
+
+    private void OperateMove()
+    {
+        //キーボード操作の場合の移動方法WASDで移動する.
+        if (Input.GetKey(KeyCode.W))
+        {
+            transform.position += new Vector3(0, 0, speed);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.position += new Vector3(-speed, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.position += new Vector3(0, 0, -speed);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.position += new Vector3(speed, 0, 0);
+        }
     }
 
     //　プレイヤー移動処理
-    private void Move()
+    private void MoveByLonLat()
     {
-        //　キーボード操作でない時
-        if (!isOperateMode)
+        // 位置情報が取得可能なら
+        if (lonLatGetter.CanGetLonLat())
         {
-            // 位置情報が取得可能なら
-            if (lonLatGetter.CanGetLonLat())
+            Vector3 mapPos;
+            // map2dを用いて、緯度経度をゲームシーン上の座標に変換する
+            // 表示されているマップのよって非アクティブかどうかが異なるため、アクティブになっているマップの方でメソッドを呼び出す必要がある
+            if (map2d.gameObject.activeSelf)
             {
-                Vector3 mapPos;
-                // map2dを用いて、緯度経度をゲームシーン上の座標に変換する
-                // 表示されているマップのよって非アクティブかどうかが異なるため、アクティブになっているマップの方でメソッドを呼び出す必要がある
-                if (map2d.gameObject.activeSelf)
-                {
-                    prevLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
-                    prevLocation.Longitude = map2d.WorldToGeoPosition(transform.position).y;
-                    mapPos = map2d.GeoToWorldPosition(new Vector2d(lonLatGetter.location.Latitude, lonLatGetter.location.Longitude), true);
-                }
-                else
-                {
-                    prevLocation.Latitude = map3d.WorldToGeoPosition(transform.position).x;
-                    prevLocation.Longitude = map3d.WorldToGeoPosition(transform.position).y;
-                    mapPos = map3d.GeoToWorldPosition(new Vector2d(lonLatGetter.location.Latitude, lonLatGetter.location.Longitude), true);
-                }
-                //プレイヤーの場所を変更する
-                transform.position = new Vector3(mapPos.x, 0.5f, mapPos.z);
-                //プレイヤーをスマホが向いている方向に回転させる
-                transform.localEulerAngles = new Vector3(0, 0, 360 - Input.compass.trueHeading);
-                currentLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
-                currentLocation.Longitude = map2d.WorldToGeoPosition(transform.position).y;
-                //データ更新
-                DataUpdate();
+                mapPos = map2d.GeoToWorldPosition(new Vector2d(lonLatGetter.location.Latitude, lonLatGetter.location.Longitude), true);
             }
             else
             {
-                Debug.Log("計測不可");
+                mapPos = map3d.GeoToWorldPosition(new Vector2d(lonLatGetter.location.Latitude, lonLatGetter.location.Longitude), true);
             }
+            //プレイヤーの場所を変更する
+            transform.position = new Vector3(mapPos.x, 0.5f, mapPos.z);
+            //プレイヤーをスマホが向いている方向に回転させる
+            transform.localEulerAngles = new Vector3(0, 0, 360 - Input.compass.trueHeading);
         }
         else
         {
-            //キーボード操作の場合の移動方法WASDで移動する.
-            if (Input.GetKey(KeyCode.W))
-            {
-                transform.position += new Vector3(0,0,speed);
-            }
-            if(Input.GetKey(KeyCode.A))
-            {
-                transform.position += new Vector3(-speed, 0,0);
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                transform.position += new Vector3(0, 0, -speed);
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                transform.position += new Vector3(speed, 0, 0);
-            }
+            Debug.Log("計測不可");
         }
     }
 
-    //前の位置座標と今の位置座標を用いて、kmに変換した後ユーザデータ管理部を更新する
-    private void DataUpdate()
+    //ある時間間隔kmに変換した後ユーザデータ管理部を更新する
+    IEnumerator DataUpdate()
     {
-        userDataManager.UpdateDistanceTraveled(NaviMath.LatlngDistance(prevLocation,currentLocation));
+        while (true)
+        {
+            if (!lonLatGetter.CanGetLonLat())
+                break;
+            //10秒前の位置
+            if (map2d.gameObject.activeSelf)
+            {
+                prevLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
+                prevLocation.Longitude = map2d.WorldToGeoPosition(transform.position).y;
+            }
+            else
+            {
+                prevLocation.Latitude = map3d.WorldToGeoPosition(transform.position).x;
+                prevLocation.Longitude = map3d.WorldToGeoPosition(transform.position).y;
+            }
+            yield return new WaitForSeconds(intervalTime);
+            //10秒経過後の位置
+            if (map2d.gameObject.activeSelf)
+            {
+                currentLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
+                currentLocation.Longitude = map2d.WorldToGeoPosition(transform.position).y;
+            }
+            else
+            {
+                currentLocation.Latitude = map3d.WorldToGeoPosition(transform.position).x;
+                currentLocation.Longitude = map3d.WorldToGeoPosition(transform.position).y;
+            }
+            var addDistance = NaviMath.LatlngDistance(prevLocation, currentLocation);
+            Debug.Log(addDistance);
+            userDataManager.UpdateDistanceTraveled(addDistance);
+        }
     }
 }

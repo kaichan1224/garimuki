@@ -16,17 +16,12 @@ public class PlayerAppearManager : MonoBehaviour
     //アニメーションをコントロール
     [SerializeField] private Animator animator;
     //userdatamanager
-    private UserDataManager userDataManager;
-    //userdatamanagerをアタッチするためのゲームオブジェクト
-    [SerializeField] private GameObject userDataManagerObject;
-    //プレイヤーのレベル
-    [SerializeField] private int level = 1;
+    [SerializeField] private UserDataManager userDataManager;
     //前フレームのposition
-    private Vector3 previousPosition;
+    [SerializeField] private Vector3 previousPosition;
     void Start()
     {
         previousPosition = transform.position;
-        userDataManager = userDataManagerObject.GetComponent<UserDataManager>();
         animator = GetComponent<Animator>();
         LevelUp();
     }
@@ -61,6 +56,7 @@ public class PlayerAppearManager : MonoBehaviour
     //playerModelsに格納した順番をそのままindex直接指定した方がいい
     void LevelUp()
     {
+        /*
         //今現在の累積距離をユーザデータ管理部から取得
         double nowDistance = userDataManager.GetDistanceTraveled();
         //累積距離が1km超えたら
@@ -87,5 +83,6 @@ public class PlayerAppearManager : MonoBehaviour
             playerModels[1].SetActive(false);
             animator = playerModels[0].GetComponent<Animator>();
         }
+        */
     }
 }

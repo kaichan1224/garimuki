@@ -3,7 +3,7 @@
  *** Date:2023.5.19
  *** Purpose:達成項目の管理を行う
  *** Last Editor:AL21115
- *** Last Edited Date:2023.6.8
+ *** Last Edited Date:2023.6.10
  **************************************/
 
 using System.Collections;
@@ -13,7 +13,7 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 using System.Reflection;
-
+using UniRx;
 
 public class AchieveManager : MonoBehaviour
 {
@@ -21,25 +21,19 @@ public class AchieveManager : MonoBehaviour
     [SerializeField] private List<Achievement> achievements;
     //アチーブメントオブジェクト(UI)
     [SerializeField] private List<GameObject> achievementObjects;
-    //ユーザーデータ管理部を扱うためのゲームオブジェクト
-    [SerializeField] private GameObject userDataManagerObject;
-    //外部から呼び出すユーザデータ管理部
-    private UserDataManager userDataManager;
 
-    private void Awake()
-    {
-        userDataManager = userDataManagerObject.GetComponent<UserDataManager>();
-    }
-
+    [SerializeField] private UserDataManager userDataManager;
     private void Start()
     {
         ResetAchieve();
         StartCoroutine(UpdateUsertoAchieve());
     }
 
+    /// <summary>
+    /// アチーブメントの中身を動的に生成
+    /// </summary>
     private void ResetAchieve()
     {
-        //各アチーブメントの中身を動的に生成
         for (int index = 0; index < achievements.Count; index++)
         {
             Achievement achievement = achievements[index];
@@ -52,7 +46,11 @@ public class AchieveManager : MonoBehaviour
         }
     }
 
-    //アチーブメント名を指定して、達成率を更新する.アチーブメントオブジェクトの中身も更新する.
+    /// <summary>
+    /// アチーブメント名を指定して、達成率を更新する.アチーブメントオブジェクトの中身も更新する.
+    /// </summary>
+    /// <param name="achievementName">更新するアチーブメントの名前</param>
+    /// <param name="currentprogress">アチーブメントの項目に関する現在の数値</param>
     public void UpdateAchievementProgress(string achievementName,int currentprogress)
     {
         //指定した名前のアチーブメントを取得
@@ -72,26 +70,28 @@ public class AchieveManager : MonoBehaviour
             achievement.isAchieved = true;
     }
 
-    //ユーザ情報からachievementsを更新する
-    //60秒の定期実行：Unirxに置き換えれるなら置き換えた方が良い
+    /// <summary>
+    /// ユーザ情報からachievementsを更新する
+    /// TODO 60秒の定期実行：Unirxに置き換えれるなら置き換えた方が良い
+    /// </summary>
+    /// <returns>待ち時間60秒</returns>
     IEnumerator UpdateUsertoAchieve()
     {
         while (true)
         {
             //距離に関するアチーブメント
-            double distance = userDataManager.GetDistanceTraveled();
+            double distance = userDataManager.distanceTraveled.Value;
             UpdateAchievementProgress("TravelDistanceLv1", (int)distance);
             UpdateAchievementProgress("TravelDistanceLv2", (int)distance);
             UpdateAchievementProgress("TravelDistanceLv3", (int)distance);
             //連続ログインに関するアチーブメント
-            int consecutiveLogins = userDataManager.GetconsecutiveLogins();
+            int consecutiveLogins = userDataManager.maxConsecutiveLoginsDay.Value;
             UpdateAchievementProgress("Login1week", consecutiveLogins);
             UpdateAchievementProgress("Login1month", consecutiveLogins);
             UpdateAchievementProgress("Login1year", consecutiveLogins);
-            //都道府県に関するアチーブメント
-            //int visitedPrefCnt = userDataManager.GetVisitedPrefectureCnt();
-            //UpdateAchievementProgress("KantoMaster", consecutiveLogins);
-            //UpdateAchievementProgress("ZenkokuMaster", consecutiveLogins);
+            //プレイ時間に関するアチーブメント
+            int hour = (int)userDataManager.totalPlayHours.Value;
+            UpdateAchievementProgress("GameMaster", hour);
             yield return new WaitForSeconds(60);
         }
     }
