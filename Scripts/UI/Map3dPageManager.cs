@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class Map3dPageManager : MonoBehaviour
 {
     [SerializeField] private Button mapSwitchButton;
+    [SerializeField] private Button playerInfoPageButton;
     [SerializeField] private Button menuButton;
     [SerializeField] private GameObject menuPage;
     [SerializeField] private GameObject map2dPage;
@@ -18,6 +19,7 @@ public class Map3dPageManager : MonoBehaviour
     [SerializeField] private GameObject camera3d;
     [SerializeField] private GameObject map2d;
     [SerializeField] private GameObject map3d;
+    [SerializeField] private GameObject playerInfoPage;
     private void OnEnable()
     {
         mapSwitchButton.onClick.AddListener(()=>
@@ -33,6 +35,12 @@ public class Map3dPageManager : MonoBehaviour
         menuButton.onClick.AddListener(() =>
         {
             menuPage.SetActive(true);
+            this.gameObject.SetActive(false);
+        });
+
+        playerInfoPageButton.onClick.AddListener(() =>
+        {
+            playerInfoPage.SetActive(true);
             this.gameObject.SetActive(false);
         });
     }

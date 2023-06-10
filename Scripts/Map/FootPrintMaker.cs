@@ -11,35 +11,29 @@ using UnityEngine.UIElements;
 
 public class FootPrintMaker : MonoBehaviour
 {
-    [SerializeField]
-    private Transform player;
-    [SerializeField]
-    private float intervalTime = 1f;
+    [SerializeField]　private Transform player;
+    // TODO 設定からいじれるようにする
+    [SerializeField]　private float intervalTime = 1f;
 
-    [SerializeField]
-    private GameObject spaceTimeDataManagerObject;
+    [SerializeField]　private GameObject spaceTimeDataManagerObject;
     private SpaceTimeDataManager spaceTimeDataManager;
     // 前回のピン設置時間を格納する変数
     float lastPinPlacementTime = 0.0f;
     [SerializeField] private float adjust = 0f;//足跡が表示する位置の調整
     private LineRenderer line;
-    [SerializeField]
-    private Material lineMaterial;
+
     private void Awake()
     {
-        lineMaterial.SetTextureScale("_MainTex", new Vector2(-0.5f, 0.5f));
         spaceTimeDataManager = spaceTimeDataManagerObject.GetComponent<SpaceTimeDataManager>();
     }
 
     private void Start()
     {
         line = gameObject.AddComponent<LineRenderer>();
-        line.material = lineMaterial;
         line.positionCount = 0;
         line.loop = false;
         line.startWidth = 1f;                   // 開始点の太さを0.1にする
         line.endWidth = 1f;
-        line.textureMode = LineTextureMode.Tile;
         line.positionCount = 0;
         line.loop = false;
         spaceTimeDataManager.Load(SpaceTimeDataManager.GetYYMMDD());
@@ -56,9 +50,7 @@ public class FootPrintMaker : MonoBehaviour
     {
         // ピンを設置する時間かどうか確認する
         if (Time.time - lastPinPlacementTime < intervalTime)
-        {
             return;
-        }
         // プレイヤーの位置にピンを設置する
         Vector3 position = player.position;
         spaceTimeDataManager.AddData(new SpaceTimeOneData(position));
