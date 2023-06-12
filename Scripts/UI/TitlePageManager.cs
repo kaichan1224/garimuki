@@ -11,13 +11,13 @@ using UnityEngine.UI;
 public class TitlePageManager : MonoBehaviour
 {
     [SerializeField] Button startButton;
-    [SerializeField] GameObject mapPage;
+    [SerializeField] GameObject loadingPage;
     // Start is called before the first frame update
     void Start()
     {
         startButton.onClick.AddListener(() =>
         {
-            mapPage.SetActive(true);
+            loadingPage.SetActive(true);
             this.gameObject.SetActive(false);
         });
     }

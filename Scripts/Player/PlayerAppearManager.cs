@@ -22,7 +22,7 @@ public class PlayerAppearManager : MonoBehaviour
     void Start()
     {
         previousPosition = transform.position;
-        animator = GetComponent<Animator>();
+        animator = playerModels[0].GetComponent<Animator>();
         LevelUp();
     }
 
@@ -54,6 +54,7 @@ public class PlayerAppearManager : MonoBehaviour
 
     //キャラクターの見た目が変更するメソッド
     //playerModelsに格納した順番をそのままindex直接指定した方がいい
+    // TODO モデルが出来次第作業にとりかかる
     void LevelUp()
     {
         /*

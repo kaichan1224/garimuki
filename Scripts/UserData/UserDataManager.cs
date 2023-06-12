@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Unity.VisualScripting;
 
 public class UserDataManager : MonoBehaviour
 {
@@ -74,17 +75,33 @@ public class UserDataManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-
+    /// <summary>
+    /// 距離を増加させるクラス
+    /// </summary>
+    /// <param name="moveDistance">増加する</param>
     public void UpdateDistanceTraveled(double moveDistance)
     {
         distanceTraveled.Value += moveDistance;
     }
-
-    public void UpdateConsecutiveLoginDay(double moveDistance)
+    /// <summary>
+    /// 消費カロリーを計算するクラス
+    /// </summary>
+    /// <returns></returns>
+    public double CalculateCaloriesBurned(double moveDistance)
     {
-        distanceTraveled.Value += moveDistance;
-    }
+        double weight = 70d;
+        // 消費カロリーの計算式（例としてMET（代謝当量）を使用）
+        // MET値は活動の強度によって異なる値を使用する必要があります
+        // ここでは簡略化のために一定のMET値を使用しています
+        double metValue = 3.5d;  // 適切なMET値を設定してください
+        // 移動距離をメートルに変換
+        double distanceInMeter = moveDistance * 1000d;
+        // 消費カロリーの計算
+        double calories = metValue * weight * distanceInMeter / 1000f;
 
+        return calories;
+    }
+   
     /// <summary>
     /// 経験値を増加させるクラス
     /// 一定量を超えたらレベルも増加する

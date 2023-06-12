@@ -15,6 +15,7 @@ using TMPro;
 using System.Reflection;
 using UniRx;
 
+// TODO　全体的に置き換える
 public class AchieveManager : MonoBehaviour
 {
     //アチーブメントの中身
