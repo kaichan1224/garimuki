@@ -11,11 +11,11 @@ using UnityEngine.UIElements;
 
 public class FootPrintMaker : MonoBehaviour
 {
-    [SerializeField]　private Transform player;
+    [SerializeField] private Transform player;
     // TODO 設定からいじれるようにする
-    [SerializeField]　private float intervalTime = 1f;
-
-    [SerializeField]　private GameObject spaceTimeDataManagerObject;
+    [SerializeField] private float intervalTime = 1f;
+    [SerializeField] private GameObject map3dObject;
+    [SerializeField] private GameObject spaceTimeDataManagerObject;
     private SpaceTimeDataManager spaceTimeDataManager;
     // 前回のピン設置時間を格納する変数
     float lastPinPlacementTime = 0.0f;
@@ -48,6 +48,16 @@ public class FootPrintMaker : MonoBehaviour
 
     void Update()
     {
+        if (map3dObject.activeSelf)
+        {
+            line.startWidth = 0f; // 線の幅をゼロに設定
+            line.endWidth = 0f; // 線の幅をゼロに設定
+        }
+        else
+        {
+            line.startWidth = 1f; // 線の幅をゼロに設定
+            line.endWidth = 1f; // 線の幅をゼロに設定
+        }
         // ピンを設置する時間かどうか確認する
         if (Time.time - lastPinPlacementTime < intervalTime)
             return;
