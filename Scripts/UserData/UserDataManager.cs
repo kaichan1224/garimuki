@@ -38,11 +38,12 @@ public class UserDataManager : MonoBehaviour
         {
             string loadjson = PlayerPrefs.GetString(USERDATA_PREF_KEY);
             userData = JsonUtility.FromJson<UserData>(loadjson);
+            Debug.Log(userData);
         }
         else
         {
             userData = new UserData();
-            userData.distanceTraveled = 0f;
+            userData.distanceTraveled = 0;
             userData.consecutiveLoginDay = 0;
             userData.exp = 0;
             userData.level = 1;
@@ -82,6 +83,7 @@ public class UserDataManager : MonoBehaviour
     public void UpdateDistanceTraveled(double moveDistance)
     {
         distanceTraveled.Value += moveDistance;
+        Debug.Log($"[UpdateDistanceTraveled]{distanceTraveled.Value}");
     }
     /// <summary>
     /// 消費カロリーを計算するクラス

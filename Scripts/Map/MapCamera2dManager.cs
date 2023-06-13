@@ -7,11 +7,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//プレイヤーの場所を追跡するようにカメラを移動させる
+/// <summary>
+/// プレイヤーの場所を追跡するようにカメラを移動させるためのモジュール
+/// </summary>
 public class MapCamera2dManager : MonoBehaviour
 {
-    //　プレイヤーのtransformを取得する
+    //　プレイヤーのtransformをインスペクターから取得する
     [SerializeField] private Transform player;
+
+    /// <summary>
+    ///　カメラがプレイヤーに追従する処理を行うメソッド
+    /// </summary>
     void Update()
     {
         transform.position = new Vector3(player.position.x,transform.position.y,player.position.z);

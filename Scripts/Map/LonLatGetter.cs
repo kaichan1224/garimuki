@@ -1,76 +1,81 @@
 /**************************************
  *** Designer:AL21115
- *** Date:2023.5.23
+ *** Date:2023.6.13
  *** 位置情報取得
  **************************************/
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-/// <summary>経緯度取得クラス</summary>
-public class LonLatGetter : MonoBehaviour
+/// <summary>
+/// 位置情報取得を行うモジュール
+/// </summary>
+public class LonlatGetter : MonoBehaviour
 {
-    /// <summary>経緯度取得間隔（秒）</summary>
-    [SerializeField]
-    private float IntervalSeconds = 1f;
-    [SerializeField] private TMP_Text test;
-    [SerializeField] private TMP_Text test2;
+    //位置情報の取得間隔
+    [SerializeField] private int intervalTime = 5;
+    public static LonlatGetter Instance { set; get; }
 
-    /// <summary>ロケーションサービスのステータス</summary>
-    private LocationServiceStatus locationServiceStatus;
+    //経度
+    public float latitude　= 35.6894f;
+    //緯度
+    public float longitude = 139.6917f;
 
-    //　緯度経度
-    public Location location;
 
-    /// <summary>緯度経度情報が取得可能か</summary>
-    /// <returns>可能ならtrue、不可能ならfalse</returns>
-    public bool CanGetLonLat()
+    /// <summary>
+    /// 位置情報取得処理を開始するメソッド
+    /// </summary>
+    private void Start()
     {
-        return Input.location.isEnabledByUser;
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        StartCoroutine(StartLocationService());
     }
 
-    /// <summary>経緯度取得処理</summary>
-    /// <returns>一定期間毎に非同期実行するための戻り値</returns>
-    private IEnumerator Start()
+    /// <summary>
+    /// 位置情報を定期的に取得する非同期処理メソッド
+    /// </summary>
+    /// <returns>待ち時間</returns>
+    private IEnumerator StartLocationService()
     {
-        test.text = "Start";
+        // ユーザーが位置情報を取得可能にしているか
+        if (!Input.location.isEnabledByUser)
+        {
+            yield break;
+        }
+
+        // 位置情報取得開始
+        Input.location.Start();
+        Input.compass.enabled = true;
+
+        // 取得時間が20秒超えたら取得できないようにする
+        int maxWait = 20;
+        while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
+        {
+            yield return new WaitForSeconds(1);
+            maxWait--;
+        }
+
+        if (maxWait <= 0)
+        {
+            yield break;
+        }
+
+        // 接続がされていない時
+        if (Input.location.status == LocationServiceStatus.Failed)
+        {
+            yield break;
+        }
+
+        // 位置情報を定期的に取得
         while (true)
         {
-            GetLocation();
-            Debug.Log(1);
-            yield return new WaitForSeconds(IntervalSeconds);
+            //経度取得
+            latitude = Input.location.lastData.latitude;
+            //緯度取得
+            longitude = Input.location.lastData.longitude;
+            yield return new WaitForSeconds(intervalTime);
         }
     }
-
-    private void GetLocation()
-    {
-        locationServiceStatus = Input.location.status;
-        if (Input.location.isEnabledByUser)
-        {
-            test.text = "GetLocation";
-            switch (locationServiceStatus)
-            {
-                case LocationServiceStatus.Stopped:
-                    //Input.compass.enabled = true;
-                    Input.location.Start();
-                    test2.text = "Stop";
-                    break;
-                case LocationServiceStatus.Running:
-                    location.Longitude = Input.location.lastData.longitude;
-                    location.Latitude = Input.location.lastData.latitude;
-                    test2.text = "Run";
-                    break;
-                default:
-                    test2.text = "ELSE";
-                    break;
-            }
-            test.text += location.Longitude.ToString();
-        }
-        else
-        {
-            test.text = "GetLocation NG";
-        }
-    }
-
-
 }
