@@ -9,6 +9,7 @@ using UnityEngine;
 
 /// <summary>
 /// プレイヤーの場所を追跡するようにカメラを移動させるためのモジュール
+/// TODO マップのスクロール・拡大ができるようにする。
 /// </summary>
 public class MapCamera2dManager : MonoBehaviour
 {
