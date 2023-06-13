@@ -16,7 +16,7 @@ public class SpaceTimeDataManager : MonoBehaviour
     {
         if (System.IO.File.Exists(Application.persistentDataPath + "/" + GetYYMMDD() + ".json") == false)
         {
-            //ResetData();
+            ResetData();
         }
     }
 
