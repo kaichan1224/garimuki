@@ -9,35 +9,45 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// 足跡生成処理を行うモジュールクラス。
+/// </summary>
 public class FootPrintMaker : MonoBehaviour
 {
+    //　プレイヤーの移動距離
     [SerializeField] private Transform player;
-    // TODO 設定からいじれるようにする
+    // 足跡生成間隔　TODO 設定からいじれるようにする
     [SerializeField] private float intervalTime = 1f;
+    // 3Dマップのゲームオブジェクト：3DページではLineRendererを非表示にするため、今のページが3Dか2Dを判別する必要がある。
     [SerializeField] private GameObject map3dObject;
-    [SerializeField] private GameObject spaceTimeDataManagerObject;
-    private SpaceTimeDataManager spaceTimeDataManager;
+    //　時空間情報管理部
+    [SerializeField] private SpaceTimeDataManager spaceTimeDataManager;
     // 前回のピン設置時間を格納する変数
     float lastPinPlacementTime = 0.0f;
-    [SerializeField] private float adjust = 0f;//足跡が表示する位置の調整
+    //足跡が表示する位置の調整
+    [SerializeField] private float adjust = 0f;
+    // 2dマップに置いて通った場所を表示するために使用するLineRenderer
     private LineRenderer line;
 
-    private void Awake()
-    {
-        spaceTimeDataManager = spaceTimeDataManagerObject.GetComponent<SpaceTimeDataManager>();
-    }
-
+    /// <summary>
+    /// 足跡生成の初期化を行うメソッド
+    /// </summary>
     private void Start()
     {
         line = gameObject.AddComponent<LineRenderer>();
+        //点の数
         line.positionCount = 0;
+        //始点と終点を繋げない
         line.loop = false;
-        line.startWidth = 1f;                   // 開始点の太さを0.1にする
+        //開始点の太さ
+        line.startWidth = 1f;
+        //終点の太さ
         line.endWidth = 1f;
-        line.positionCount = 0;
-        line.loop = false;
+        //時空間管理部からデータを取得
         spaceTimeDataManager.Load(SpaceTimeDataManager.GetYYMMDD());
+        //取得されたデータ
         SpaceTimeData loadData = spaceTimeDataManager.spaceTimeData;
+        //取得したデータを足跡として反映させる
         foreach (SpaceTimeOneData data in loadData.spaceTimeData)
         {
             Vector3 position = data.position;
@@ -46,13 +56,18 @@ public class FootPrintMaker : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 新たに足跡を生成する処理を行うメソッド. TODO 非同期処理で実装してもいいかも
+    /// </summary>
     void Update()
     {
+        //3Dマップの場面では、線を非表示にするための線の太さを0にする
         if (map3dObject.activeSelf)
         {
             line.startWidth = 0f; // 線の幅をゼロに設定
             line.endWidth = 0f; // 線の幅をゼロに設定
         }
+        //そうでない時は線の太さを元に戻す
         else
         {
             line.startWidth = 1f; // 線の幅をゼロに設定
@@ -63,6 +78,7 @@ public class FootPrintMaker : MonoBehaviour
             return;
         // プレイヤーの位置にピンを設置する
         Vector3 position = player.position;
+        //　時空間情報管理部でデータを追加する
         spaceTimeDataManager.AddData(new SpaceTimeOneData(position));
         //線を描写する部分
         line.positionCount++;

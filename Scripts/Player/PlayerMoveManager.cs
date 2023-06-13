@@ -3,7 +3,7 @@
  *** Date:2023.5.23
  *** プレイヤーの移動
  *** Last Editor:AL21115
- *** Last Edited:2023.6.8
+ *** Last Edited:2023.6.13
 ***************************************/
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +15,9 @@ using UnityEngine.UI;
 using Mapbox.Unity.Map;
 using Unity.Collections;
 
+/// <summary>
+/// プレイヤーが位置情報に基づいて移動する制御を行うクラス
+/// </summary>
 public class PlayerMoveManager : MonoBehaviour
 {
     // 2dマップを管理するクラス
@@ -22,7 +25,7 @@ public class PlayerMoveManager : MonoBehaviour
     // 3dマップを管理するクラス
     [SerializeField] private AbstractMap map3d;
     //　位置情報を取得するためのクラス
-    [SerializeField] private LonlatGetter2 lonLatGetter;
+    [SerializeField] private LonlatGetter lonLatGetter;
 
     //　プレイヤーがキーボードで操作できるようにするためのフラグ(debug用)
     [SerializeField] private bool isOperateMode = false;
@@ -32,32 +35,44 @@ public class PlayerMoveManager : MonoBehaviour
     // ユーザーデータを管理するためのクラス
     [SerializeField] private UserDataManager userDataManager;
     // 距離を取得する間隔
-    [SerializeField] private float intervalTime = 10f;
+    [SerializeField] private float intervalTime = 60f;
     //　直前の位置
     private Location prevLocation = new Location();
     //　今現在の位置
     private Location currentLocation = new Location();
 
+    /// <summary>
+    /// 移動した距離を記録するデータ更新の定期実行を開始するメソッド
+    /// </summary>
     private void Start()
     {
         StartCoroutine(DataUpdate());
     }
 
+    /// <summary>
+    /// フレーム置きに実行されるメソッド
+    /// </summary>
     private void Update()
     {
+        //キーボード操作の時の移動方法
         if (isOperateMode)
         {
             OperateMove();
         }
+        //スマホの位置情報に基づく移動の際に実行されるメソッド
         else
         {
             MoveByLonLat();
         }
     }
 
+    /// <summary>
+    /// オペレートモードの時に、キーボードの操作によりプレイヤーが移動するためのメソッド
+    /// </summary>
     private void OperateMove()
     {
-        //キーボード操作の場合の移動方法WASDで移動する.
+        //キーボード操作の場合の移動方法
+        //WASDで移動する.
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += new Vector3(0, 0, speed);
@@ -76,7 +91,9 @@ public class PlayerMoveManager : MonoBehaviour
         }
     }
 
-    //　プレイヤー移動処理
+    /// <summary>
+    /// スマホの位置情報に基づいてプレイヤーが移動する処理を行うメソッド
+    /// </summary>
     private void MoveByLonLat()
     {
         Vector3 mapPos;
@@ -92,15 +109,19 @@ public class PlayerMoveManager : MonoBehaviour
         }
         //プレイヤーの場所を変更する
         transform.position = new Vector3(mapPos.x, 0.5f, mapPos.z);
- 
+        //プレイヤーをスマホが向いている方向に回転させる
+        transform.localEulerAngles = new Vector3(0, 0, 360 - Input.compass.trueHeading);
+
     }
 
-    //ある時間間隔kmに変換した後ユーザデータ管理部を更新する
+    /// <summary>
+    /// 一定時間おきにプレイヤーの移動距離を計算し、ユーザーデータ管理部に反映させる.
+    /// </summary>
+    /// <returns>データを取得する時間の間隔</returns>
     IEnumerator DataUpdate()
     {
         while (true)
         {
-            //10秒前の位置
             if (map2d.gameObject.activeSelf)
             {
                 prevLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
@@ -111,8 +132,8 @@ public class PlayerMoveManager : MonoBehaviour
                 prevLocation.Latitude = map3d.WorldToGeoPosition(transform.position).x;
                 prevLocation.Longitude = map3d.WorldToGeoPosition(transform.position).y;
             }
+            //intervalTimeだけ待機する
             yield return new WaitForSeconds(intervalTime);
-            //10秒経過後の位置
             if (map2d.gameObject.activeSelf)
             {
                 currentLocation.Latitude = map2d.WorldToGeoPosition(transform.position).x;
@@ -123,8 +144,11 @@ public class PlayerMoveManager : MonoBehaviour
                 currentLocation.Latitude = map3d.WorldToGeoPosition(transform.position).x;
                 currentLocation.Longitude = map3d.WorldToGeoPosition(transform.position).y;
             }
-            var addDistance = NaviMath.LatlngDistance(prevLocation, currentLocation);
-            userDataManager.UpdateDistanceTraveled(addDistance);
+            //intervalTimeの待機前と後の緯度経度を元に移動距離を測定する
+            double addDistance = NaviMath.LatlngDistance(prevLocation, currentLocation);
+            //移動距離が測れない時?Nanになるのでそうでない時は測定する TODO　単体テストで要確認.
+            if(!double.IsNaN(addDistance))
+                userDataManager.UpdateDistanceTraveled(addDistance);
         }
     }
 }

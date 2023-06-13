@@ -7,15 +7,21 @@
  **************************************/
 using System;
 
-//　緯度経度変換用のStaticクラス
+/// <summary>
+///　緯度経度変換用のStaticクラス
+/// </summary>
 public static class NaviMath
 {
     // 地球の半径
     private const double EARTH_RADIUS = 6378.137d;
     public static double Deg2Rad { get { return Math.PI / 180.0d; } }
 
-    //kmで計算する
-    //Haversine formulaのアルゴリズムを使用
+    /// <summary>
+    /// ２地点の緯度経度間の距離をkmで計算する.Haversine formulaのアルゴリズムを使用
+    /// </summary>
+    /// <param name="a">地点aの緯度経度</param>
+    /// <param name="b">地点bの緯度経度</param>
+    /// <returns>地点aと地点bの間での距離km</returns>
     public static double LatlngDistance(Location a, Location b)
     {
         double dlat1 = a.Latitude * Deg2Rad;
