@@ -14,9 +14,8 @@
         - issuesからnew issueを押す
         - タイトルにやることを、Writeに何を具体的にするかを書く
         - Submit new issueでissueを立てる
-        - コード、素材担当じゃない人は2~4スキップして、作業が一通り終わったらコメントの残してissue閉じてください
     2. (mainブランチから始める)
-        - git checkout main ブランチをmainに (プルリク出した後コード書き換えると元に戻れないので、iiiのgit add~を行ってください)
+        - git checkout main ブランチをmainに (プルリク出した後コード書き換えると元に戻れないので、2のgit add~を行ってください)
         - git branch --set-upstream-to=origin/<branch> main 現在のブランチのトラッキング情報を設定
         - git pull mainブランチの更新があるか確認する.これをすると反映されます
     3. featureブランチで開発

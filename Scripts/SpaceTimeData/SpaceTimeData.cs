@@ -1,6 +1,6 @@
 /**************************************
- *** Designer:AL21053
- *** Date:2023.6.13
+ *** Designer:AL21115
+ *** Date:2023.5.23
  *** 時空間情報のデータクラス
  **************************************/
 using System;
@@ -13,4 +13,14 @@ using UnityEngine;
 public class SpaceTimeData
 {
     public List<SpaceTimeOneData> spaceTimeData;
+}
+
+[Serializable]
+public class SpaceTimeOneData
+{
+    public Vector3 position;
+    public SpaceTimeOneData(Vector3 position)
+    {
+        this.position = position;
+    }
 }

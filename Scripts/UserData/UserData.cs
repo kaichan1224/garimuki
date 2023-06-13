@@ -10,6 +10,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// ユーザデータを管理するデータクラス
+/// </summary>
 [Serializable]
 public class UserData
 {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+/// <summary>
+/// テキストが点滅するようにするためのモジュール
+/// </summary>
 public class FontChanger : MonoBehaviour
 {
     //インスペクターから設定するか、初期化時にGetComponentして、TextMeshProUGUIへの参照を取得しておく。
@@ -33,6 +36,7 @@ public class FontChanger : MonoBehaviour
             tmp = GetComponent<TextMeshProUGUI>();
     }
 
+    //色が徐々に変わっていくようにする
     void Update()
     {
         tmp.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time / duration, 1.0f));

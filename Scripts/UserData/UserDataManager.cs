@@ -9,16 +9,28 @@ using UnityEngine;
 using UniRx;
 using Unity.VisualScripting;
 
+/// <summary>
+/// ユーザ情報を管理するモジュール
+/// </summary>
 public class UserDataManager : MonoBehaviour
 {
+    //ユーザーデータを管理するキー(重要なデータではないためそのまま記述してある)
     private const string USERDATA_PREF_KEY = "UserData";
-    private UserData userData;//ロードしたデータが格納される
+    //ユーザデータを管理するクラス
+    private UserData userData;
+    //移動距離
     public ReactiveProperty<double> distanceTraveled = new();
+    //現在の連続ログイン数
     public ReactiveProperty<int> consecutiveLoginDay = new();
+    //経験値
     public ReactiveProperty<int> exp = new();
+    //レベル　
     public ReactiveProperty<int> level = new();
+    //トータルプレイ時間
     public ReactiveProperty<float> totalPlayHours = new();
+    //最高連続ログイン数
     public ReactiveProperty<int> maxConsecutiveLoginsDay = new();
+    //累計消費kカロリー
     public ReactiveProperty<float> totalKcal = new();
 
     /// <summary>
@@ -34,12 +46,14 @@ public class UserDataManager : MonoBehaviour
     /// </summary>
     public void Load()
     {
+        //キーが既に存在したら->既にデータが存在するとき
         if (PlayerPrefs.HasKey(USERDATA_PREF_KEY))
         {
             string loadjson = PlayerPrefs.GetString(USERDATA_PREF_KEY);
             userData = JsonUtility.FromJson<UserData>(loadjson);
             Debug.Log(userData);
         }
+        //データが存在しない時、初期生成する
         else
         {
             userData = new UserData();
@@ -54,6 +68,9 @@ public class UserDataManager : MonoBehaviour
         SetReactivePropertys();
     }
 
+    /// <summary>
+    /// 変数をUIから監視できるようにするためのメソッド
+    /// </summary>
     public void SetReactivePropertys()
     {
         distanceTraveled.Value = userData.distanceTraveled;
