@@ -6,6 +6,13 @@
 - スマホの位置情報に合わせて、地図上を移動するいわゆる「位置ゲー」
 - 今まで歩いてきた道の情報が足跡として残る
 - 移動した距離に応じて、キャラクターがガリガリからムキムキになる
+- 動物を簡単タップゲームでテイム！
+
+## ゲーム画像
+<img width="181" alt="スクリーンショット 2023-06-28 15 16 50" src="https://github.com/kaichan1224/garimuki/assets/110444300/1a1bb905-9a50-4b97-a0a7-5ab4449d0151">
+<img width="186" alt="スクリーンショット 2023-06-28 15 17 04" src="https://github.com/kaichan1224/garimuki/assets/110444300/db11a297-6bab-4574-98e9-744d44fd73df">
+<img width="188" alt="スクリーンショット 2023-06-28 15 17 54" src="https://github.com/kaichan1224/garimuki/assets/110444300/b59338c2-5e8c-4843-888b-8db92a1de0bf">
+<img width="187" alt="スクリーンショット 2023-06-28 15 17 31" src="https://github.com/kaichan1224/garimuki/assets/110444300/bbc2f08f-56c4-4385-80f4-791d643d2984">
 
 ## 作業の流れ
 コードを更新する方法
