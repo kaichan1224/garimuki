@@ -8,6 +8,12 @@
 - 移動した距離に応じて、キャラクターがガリガリからムキムキになる
 - 動物を簡単タップゲームでテイム！
 
+## プレイ動画
+
+
+https://github.com/kaichan1224/garimuki/assets/110444300/a2e87f30-e8a4-4b01-a126-cee7c21223c1
+
+
 ## ゲーム画像
 <img width="181" alt="スクリーンショット 2023-06-28 15 16 50" src="https://github.com/kaichan1224/garimuki/assets/110444300/1a1bb905-9a50-4b97-a0a7-5ab4449d0151">
 <img width="186" alt="スクリーンショット 2023-06-28 15 17 04" src="https://github.com/kaichan1224/garimuki/assets/110444300/db11a297-6bab-4574-98e9-744d44fd73df">
